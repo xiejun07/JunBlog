@@ -11,6 +11,10 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+//Route::get('/', function () {
+//    return view('welcome');
+//});
+
+Route::get('/', 'Admin\IndexController@index');
+Route::get('/info', ['as' => 'index.info' ,'uses' => 'Admin\IndexController@info']);
+Route::resource('category', 'Admin\CategoryController', ['except' => 'show']);

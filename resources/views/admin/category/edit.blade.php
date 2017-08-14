@@ -2,14 +2,14 @@
 @section('content')
 
     <!--面包屑导航 开始-->
-    <div class="crumb_warp">
-        <!--<i class="fa fa-bell"></i> 欢迎使用登陆网站后台，建站的首选工具。-->
-        <i class="fa fa-home"></i> <a href="{{url('/info')}}">首页</a> &raquo; <a href="{{url('/category')}}">分类管理</a> &raquo; 新增分类
-    </div>
+    {{--<div class="crumb_warp">--}}
+        {{--<!--<i class="fa fa-bell"></i> 欢迎使用登陆网站后台，建站的首选工具。-->--}}
+        {{--<i class="fa fa-home"></i> <a href="#">首页</a> &raquo; <a href="#">商品管理</a> &raquo; 添加商品--}}
+    {{--</div>--}}
     <!--面包屑导航 结束-->
 
 	<!--结果集标题与导航组件 开始-->
-	<div class="result_wrap">
+	<div class="result_wrap" style="margin-top: -15px">
         <div class="result_title">
             <h3>快捷操作</h3>
         </div>
@@ -30,7 +30,7 @@
                     <tr>
                         <th><i class="require">*</i>分类名称：</th>
                         <td>
-                            <input type="text" class="lg" name="cate_name" value="{{old('cate_name')}}">
+                            <input type="text" class="lg" name="cate_name" value="{{$data->cate_name}}">
                             <p>标题可以写30个字</p>
                         </td>
                     </tr>
@@ -39,9 +39,9 @@
                         <td>
                             <select name="cate_pid">
                                 <option value="">==请选择==</option>
-                                <option value="0">顶级分类</option>
+                                <option value="0" @if($data->cate_pid == 0) selected @endif>顶级分类</option>
                                 @foreach($categories as $cate)
-                                    <option value="{{$cate->id}}">{{$cate->cate_name}}</option>
+                                    <option value="{{$cate->id}}" @if($data->cate_pid == $cate->id) selected @endif>{{$cate->cate_name}}</option>
                                 @endforeach
                             </select>
                         </td>
@@ -49,7 +49,7 @@
                     <tr>
                         <th>排序：</th>
                         <td>
-                            <input type="text" name="sort" value="{{old('sort')}}">
+                            <input type="text" name="sort" value="{{$data->sort}}">
                         </td>
                     </tr>
                     {{--<tr>--}}
@@ -80,7 +80,7 @@
                     <tr>
                         <th>描述：</th>
                         <td>
-                            <textarea name="cate_description">{{old('cate_description')}}</textarea>
+                            <textarea name="cate_description">{{$data->cate_description}}</textarea>
                         </td>
                     </tr>
                     {{--<tr>--}}
@@ -93,8 +93,8 @@
                     <tr>
                         <th></th>
                         <td>
-                            <input role="button" class="btn btn-primary" type="button" value="提交" id="submit">
-                            <input type="button" class="btn btn-default back" onclick="history.go(-1)" value="返回">
+                            <input role="button" class="btn btn-primary" id="submit" type="button" value="提交" onclick="updateCate({{$data->id}})">
+                            <input type="button" class="btn btn-default back" onclick="closeSelf()" value="返回">
                         </td>
                     </tr>
                 </tbody>
@@ -104,23 +104,24 @@
 
 @section('script')
     <script>
-        $('#submit').bind('click', function(){
+        function updateCate(cate_id) {
             var form = $('#create_form').serialize();
             $.ajax({
-                type: "post",
-                url: "{{url('/category')}}",
+                type: "put",
+                url: "{{url('/category')}}" + '/' +cate_id,
                 data: form,
                 beforeSend: function() {
-                    $('#submit').css('disable', 'disable');
+                    $('#submit').attr('disabled', 'disabled');
                     $('#submit').val('正在提交...');
                 },
                 success: function (msg) {
                     if (msg.status) {
                         layer.msg(msg.content, {icon:1});
+                        parent.location.reload();
                     }
                 },
                 complete: function() {
-                    $('#submit').css('disable', '');
+                    $('#submit').removeAttr('disabled');
                     $('#submit').val('提交');
                 },
                 error: function(dataError) {
@@ -130,7 +131,14 @@
                     }
                 }
             });
-        });
+        }
+
+        function closeSelf()
+        {
+            // 关闭弹出的子页面窗口
+            var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+            parent.layer.close(index);//关闭弹出的子页面窗口
+        }
     </script>
 @endsection
 

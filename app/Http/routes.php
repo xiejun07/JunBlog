@@ -17,4 +17,6 @@
 
 Route::get('/', 'Admin\IndexController@index');
 Route::get('/info', ['as' => 'index.info' ,'uses' => 'Admin\IndexController@info']);
-Route::resource('category', 'Admin\CategoryController', ['except' => 'show']);
+
+Route::resource('category', 'Admin\CategoryController');
+Route::post('/category/batchDel', ['as' => 'category.batchDel', 'uses' => 'Admin\CategoryController@batchDel']);

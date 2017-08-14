@@ -1,13 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="utf-8">
-	<link rel="stylesheet" href="{{asset('Admin/css/ch-ui.admin.css')}}">
-	<link rel="stylesheet" href="{{asset('Admin/font/css/font-awesome.min.css')}}">
-	<script type="text/javascript" src="{{asset('Admin/js/jquery.js')}}"></script>
-    <script type="text/javascript" src="{{asset('Admin/js/ch-ui.admin.js')}}"></script>
-</head>
-<body>
+@extends('layouts.default')
+@section('content')
+
 	<!--头部 开始-->
 	<div class="top_box">
 		<div class="top_left">
@@ -33,7 +26,7 @@
             <li>
             	<h3><i class="fa fa-fw fa-clipboard"></i>常用操作</h3>
                 <ul class="sub_menu">
-                    <li><a href="add.html" target="main"><i class="fa fa-fw fa-plus-square"></i>添加页</a></li>
+                    <li><a href="{{url('/category/create')}}" target="main"><i class="fa fa-fw fa-plus-square"></i>添加分类</a></li>
                     <li><a href="list.html" target="main"><i class="fa fa-fw fa-list-ul"></i>列表页</a></li>
                     <li><a href="tab.html" target="main"><i class="fa fa-fw fa-list-alt"></i>tab页</a></li>
                     <li><a href="img.html" target="main"><i class="fa fa-fw fa-image"></i>图片列表</a></li>
@@ -42,8 +35,8 @@
             <li>
                 <h3><i class="fa fa-fw  fa-pie-chart"></i>分类管理</h3>
                 <ul class="sub_menu">
-                    <li><a href="#" target="main"><i class="fa fa-fw fa-cubes"></i>分类列表</a></li>
-                    <li><a href="#" target="main"><i class="fa fa-fw fa-database"></i>新增分类</a></li>
+                    <li><a href="{{url('/category')}}" target="main"><i class="fa fa-fw fa-list"></i>分类列表</a></li>
+                    <li><a href="{{url('/category/create')}}" target="main"><i class="fa fa-fw fa-plus"></i>新增分类</a></li>
                 </ul>
             </li>
             <li>
@@ -84,5 +77,5 @@
 		CopyRight © 2015. Powered By <a href="http://www.houdunwang.com">http://www.houdunwang.com</a>.
 	</div>
 	<!--底部 结束-->
-</body>
-</html>
+
+@endsection

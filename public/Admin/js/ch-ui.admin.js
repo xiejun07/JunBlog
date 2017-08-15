@@ -62,5 +62,25 @@ function pic_minus(obj){
 	$(obj).parents('li').remove();
 }
 
+// daterange插件
+$(function () {
+    $('.daterange').daterangepicker({
+        autoUpdateInput: false,
+        timePicker: true,
+        locale: {
+            format: 'YYYY/MM/DD hh:mm:ss',
+            cancelLabel: 'Clear'
+        }
+    });
+
+    $('.daterange').on('apply.daterangepicker', function(ev, picker){
+        $(this).val(picker.startDate.format('YYYY/MM/DD hh:mm:ss') + ' - ' + picker.endDate.format('YYYY/MM/DD hh:mm:ss'));
+        console.log($('#daterange').val());
+    });
+
+    $('.daterange').on('cancel.daterangepicker', function(ev, picker){
+        $(this).val('');
+    });
+});
 
 

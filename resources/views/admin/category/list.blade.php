@@ -23,6 +23,7 @@
                     </td>
                     <th width="70">关键字:</th>
                     <td><input type="text" name="keywords" placeholder="关键字"></td>
+                    <td><input type="text" class="daterange" name="daterange" placeholder="请选择时间段"/></td>
                     <td><input class="btn btn-primary" type="submit" name="sub" value="查询"></td>
                 </tr>
             </table>
@@ -83,21 +84,24 @@
                 </table>
 
 
-<div class="page_nav">
-<div>
-<a class="first" href="/wysls/index.php/Admin/Tag/index/p/1.html">第一页</a> 
-<a class="prev" href="/wysls/index.php/Admin/Tag/index/p/7.html">上一页</a> 
-<a class="num" href="/wysls/index.php/Admin/Tag/index/p/6.html">6</a>
-<a class="num" href="/wysls/index.php/Admin/Tag/index/p/7.html">7</a>
-<span class="current">8</span>
-<a class="num" href="/wysls/index.php/Admin/Tag/index/p/9.html">9</a>
-<a class="num" href="/wysls/index.php/Admin/Tag/index/p/10.html">10</a> 
-<a class="next" href="/wysls/index.php/Admin/Tag/index/p/9.html">下一页</a> 
-<a class="end" href="/wysls/index.php/Admin/Tag/index/p/11.html">最后一页</a> 
-<span class="rows">11 条记录</span>
-</div>
-</div>
+{{--<div class="page_nav">--}}
+{{--<div>--}}
+{{--<a class="first" href="/wysls/index.php/Admin/Tag/index/p/1.html">第一页</a> --}}
+{{--<a class="prev" href="/wysls/index.php/Admin/Tag/index/p/7.html">上一页</a> --}}
+{{--<a class="num" href="/wysls/index.php/Admin/Tag/index/p/6.html">6</a>--}}
+{{--<a class="num" href="/wysls/index.php/Admin/Tag/index/p/7.html">7</a>--}}
+{{--<span class="current">8</span>--}}
+{{--<a class="num" href="/wysls/index.php/Admin/Tag/index/p/9.html">9</a>--}}
+{{--<a class="num" href="/wysls/index.php/Admin/Tag/index/p/10.html">10</a> --}}
+{{--<a class="next" href="/wysls/index.php/Admin/Tag/index/p/9.html">下一页</a> --}}
+{{--<a class="end" href="/wysls/index.php/Admin/Tag/index/p/11.html">最后一页</a> --}}
+{{--<span class="rows">11 条记录</span>--}}
+{{--</div>--}}
+{{--</div>--}}
 
+<div style="text-align: center">
+    {{$categories->links()}}
+</div>
 
 
                 {{--<div class="page_list">--}}
@@ -118,18 +122,25 @@
 
 @section('script')
 <script>
+    // 删除
     function delCate(cate_id, that)
     {
-        $.post(
-                '{{url('/category')}}' + '/' + cate_id,
-                {_token: '{{csrf_token()}}', _method: 'delete'},
-                function(data){
-                    data.status ? layer.msg('删除成功！', {icon:6}) : layer.msg(data.content, {icon:5});
-                    $(that).parents('tr').remove();
-                },
-                'json');
+        layer.confirm('确定执行删除操作？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            $.post(
+                    '{{url('/category')}}' + '/' + cate_id,
+                    {_token: '{{csrf_token()}}', _method: 'delete'},
+                    function(data){
+                        data.status ? layer.msg('删除成功！', {icon:6}) : layer.msg(data.content, {icon:5});
+                        $(that).parents('tr').remove();
+                    },
+                    'json');
+        }, function(index){
+            layer.close(index);
+        });
     }
-
+    // 编辑弹层
     function editCate(cate_id) {
         layer.open({
             type: 2,
@@ -141,21 +152,33 @@
             content: '{{url('/category')}}' + '/' + cate_id + '/edit'//iframe的url
         });
     }
-
+    // 批量删除
     function batchDelCategory()
     {
-        var ids = $('input[name*=id]');
+        var ids = $('input[name*=id]:checked');
         var id_arr = [];
         $.each(ids, function(i){
             id_arr.push($(this).val());
         });
         console.log(id_arr);
-        $.post(
-                '{{URL::route('category.batchDel')}}',
-                {id_arr:id_arr, _token:'{{csrf_token()}}'},
-                function(data){
-                    data.status ? layer.msg('批量删除成功！', {icon:6}) : layer.msg(data.content, {icon:5});
-                }, 'json');
+        if (id_arr.length < 1) {
+            layer.msg('请勾选后再批量操作！');
+            return false;
+        }
+        layer.confirm('确定执行删除操作？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            $.post(
+                    '{{URL::route('category.batchDel')}}',
+                    {id_arr:id_arr, _token:'{{csrf_token()}}'},
+                    function(data){
+                        data.status ? layer.msg('批量删除成功！', {icon:6}) : layer.msg(data.content, {icon:5});
+                        location.reload();
+                    }, 'json');
+        }, function(index){
+            layer.close(index);
+        });
+
     }
 </script>
 @endsection

@@ -33,8 +33,9 @@ class CategoryController extends CommonController
      */
     public function index()
     {
-        $categories = $this->categoryService->getAllCates();
-        return view('admin.category.list', compact('categories'));
+//        $categories = $this->categoryService->getAllCates();
+        $categories = $this->categoryService->getList();
+        return view('admin.category.list', compact('categories', 'data'));
     }
 
     /**

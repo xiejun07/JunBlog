@@ -35,6 +35,7 @@ class CategoryController extends CommonController
     {
 //        $categories = $this->categoryService->getAllCates();
         $categories = $this->categoryService->getList();
+//        $categories = $this->categoryService->getTreeCategory($categories);
         return view('admin.category.list', compact('categories', 'data'));
     }
 

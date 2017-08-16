@@ -70,7 +70,7 @@
                             <td>
                                 <a href="#">{{$cate->cate_name}}</a>
                             </td>
-                            <td> @if($cate->cate_pid == 0) 顶级分类 @endif </td>
+                            <td> {{($cate->cate_pid == 0) ? '顶级分类' : $cate->cate_pid}} </td>
                             <td>{{$cate->created_at}}</td>
                             <td>{{$cate->updated_at}}</td>
                             <td>{{$cate->cate_description}}</td>

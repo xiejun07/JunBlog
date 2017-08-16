@@ -21,6 +21,8 @@
 <script type="text/javascript" src="{{asset('org/layer/layer.js')}}"></script>
 <script type="text/javascript" src="{{asset('org/bootstrap-3.3.7/moment.min.js')}}"></script>
 <script type="text/javascript" src="{{asset('org/bootstrap-3.3.7/daterangepicker.js')}}"></script>
+<script type="text/javascript" src="{{asset('org/ueeditor/ueditor.config.js')}}"></script>
+<script type="text/javascript" src="{{asset('org/ueeditor/ueditor.all.js')}}"></script>
 
 @yield('script')
 

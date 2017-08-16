@@ -67,11 +67,22 @@ class CategoryService
     }
 
     /**
-     * 获得所有分类，呈树形结构
+     * 获得所有分类，呈树形结构  弃用
      */
-    public function getTreeCategory()
+    public function getTreeCategory($categories, $pid=0, $level=0)
     {
-
+        static $result = [];
+        foreach ($categories as $key => $cate) {
+            if ($cate->cate_pid == $pid) {
+                // 如果是顶级分类，就存起来，以当前id为下一级的父id递归
+                $cate->level = $level;
+                $result[] = $cate->toArray();
+                unset($categories[$key]);
+                $this->getTreeCategory($categories, $cate->id, $level+1);
+            }
+        }
+        print_r($result);die;
+        return $result;
     }
 
     /**

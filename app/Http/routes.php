@@ -18,10 +18,14 @@
 Route::get('/', 'Admin\IndexController@index');
 Route::get('/info', ['as' => 'index.info' ,'uses' => 'Admin\IndexController@info']);
 
-// category
+// category resource管理
 Route::resource('category', 'Admin\CategoryController');
 Route::post('/category/batchDel', ['as' => 'category.batchDel', 'uses' => 'Admin\CategoryController@batchDel']);
 
-// article
+// article  一条一条管理
 Route::get('/article', 'Admin\ArticleController@getList');
 Route::get('/article/create', 'Admin\ArticleController@create');
+Route::post('/article/uploadImg', 'Admin\ArticleController@uploadImgToLocal');
+Route::post('/article/store', 'Admin\ArticleController@store');
+Route::post('/article/delete', 'Admin\ArticleController@delete');
+Route::get('/article/{id}/edit', 'Admin\ArticleController@edit');

@@ -42,7 +42,7 @@
     <!--结果集标题与导航组件 结束-->
     
     <div class="result_wrap">
-        <form action="#" method="post">
+        <form method="post" id="create_form">
             <table class="add_tab">
                 <tbody>
                     <tr>
@@ -98,11 +98,15 @@
                     </tr>
                     <tr>
                         <th><i class="require">*</i>上传主图：</th>
-                        <td><input type="file" name="fileData"></td>
+                        <td>
+                            <input type="file" name="fileData" style="float: left">
+                            <input type="hidden" name="art_icon" value=""/>
+                            <div id="img_view" style="float: left"></div>
+                        </td>
                     </tr>
                     @inject('articleTypes', 'App\Http\Services\ArticleType')
                     <tr>
-                        <th>状态：</th>
+                        <th><i class="require">*</i>状态：</th>
                         <td>
                             @foreach($articleTypes::$articleTypes as $key => $type)
                                 <label for="{{'is_public'.$key}}"><input type="radio" name="is_public" id="{{'is_public'.$key}}" value="{{$key}}">{{$type}}</label>
@@ -133,7 +137,7 @@
                     <tr>
                         <th></th>
                         <td>
-                            <input type="submit" class="btn btn-primary" value="提交">
+                            <input type="button" class="btn btn-primary" value="提交" id="submit_create">
                             <input type="button" class="btn btn-default back" onclick="history.go(-1)" value="返回">
                         </td>
                     </tr>
@@ -149,6 +153,67 @@
         var ue = UE.getEditor('container');
         ue.ready(function(){
             ue.setHeight(600);
+            ue.execCommand('serverparam', '_token', '{{ csrf_token() }}');//此处为支持laravel5 csrf ,根据实际情况修改,目的就是设置 _token 值.
+        });
+    </script>
+
+    <script>
+        // 全局设置ajax带上csrf_token
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN':'{{csrf_token()}}'
+            }
+        });
+        // 点击异步上传文件
+        $('input[name=fileData]').on('change', function() {
+            var index = '';
+            var obj = this;
+            var formData = new FormData();
+            formData.append('fileData', this.files[0]);
+            $.ajax({
+                url: '{{url('/article/uploadImg')}}',
+                type: 'post',
+                data: formData,
+                processData: false,
+                contentType: false,
+                beforeSend: function(XMLHttpRequest){
+                    index = layer.load(1, {time: 5*1000});
+                },
+                success: function (data) {
+                    // 关掉圈圈转
+                    layer.close(index);
+                    if (data.status) {
+                        // 保存路径放到input中提交表单存库
+                        $('input[name=art_icon]').val(data.pathContent);
+                        layer.msg(data.content);
+                        // 图片上传之后的回显
+                        var _html = '<img src="'+ data.pathContent +'" height="200"/>';
+                        $('#img_view').html(_html);
+                    }else {
+                        layer.msg(data.content);
+                    }
+                }
+            });
+        });
+
+        // 点击提交保存文章
+        $('#submit_create').on('click', function(){
+            var form = new FormData($('#create_form')[0]);
+            alert(form);
+            $.ajax({
+                url: '{{url('/article/store')}}',
+                type: 'post',
+                data: form,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    if (data.status) {
+                        layer.msg('新建文章保存成功!', {icon:1});
+                    }else{
+                        layer.msg(data.content, {icon:2});
+                    }
+                }
+            });
         });
     </script>
 @endsection

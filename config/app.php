@@ -158,6 +158,8 @@ return [
 
         // debugbar
         Barryvdh\Debugbar\ServiceProvider::class,
+        // ueditor
+        Stevenyangecho\UEditor\UEditorServiceProvider::class
 
     ],
 

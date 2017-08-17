@@ -1,17 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="utf-8">
-	<link rel="stylesheet" href="style/css/ch-ui.admin.css">
-	<link rel="stylesheet" href="style/font/css/font-awesome.min.css">
-    <script type="text/javascript" src="style/js/jquery.js"></script>
-    <script type="text/javascript" src="style/js/ch-ui.admin.js"></script>
-</head>
-<body>
+@extends('layouts.default')
+@section('content')
+
     <!--面包屑导航 开始-->
     <div class="crumb_warp">
         <!--<i class="fa fa-bell"></i> 欢迎使用登陆网站后台，建站的首选工具。-->
-        <i class="fa fa-home"></i> <a href="#">首页</a> &raquo; <a href="#">商品管理</a> &raquo; 添加商品
+        <i class="fa fa-home"></i> <a href="#">首页</a> &raquo; <a href="#">文章管理</a> &raquo; 文章列表
     </div>
     <!--面包屑导航 结束-->
 
@@ -30,7 +23,7 @@
                     </td>
                     <th width="70">关键字:</th>
                     <td><input type="text" name="keywords" placeholder="关键字"></td>
-                    <td><input type="submit" name="sub" value="查询"></td>
+                    <td><input class="btn btn-primary" type="submit" name="sub" value="查询"></td>
                 </tr>
             </table>
         </form>
@@ -43,7 +36,7 @@
             <!--快捷导航 开始-->
             <div class="result_content">
                 <div class="short_wrap">
-                    <a href="#"><i class="fa fa-plus"></i>新增文章</a>
+                    <a href="{{url('/article/create')}}"><i class="fa fa-plus"></i>新增文章</a>
                     <a href="#"><i class="fa fa-recycle"></i>批量删除</a>
                     <a href="#"><i class="fa fa-refresh"></i>更新排序</a>
                 </div>
@@ -59,109 +52,105 @@
                         <th class="tc">排序</th>
                         <th class="tc">ID</th>
                         <th>标题</th>
-                        <th>审核状态</th>
-                        <th>点击</th>
-                        <th>发布人</th>
+                        <th>文章状态</th>
+                        <th>分类</th>
+                        <th>作者</th>
+                        <th>标签</th>
+                        <th>简介</th>
+                        <th>发布时间</th>
                         <th>更新时间</th>
-                        <th>评论</th>
                         <th>操作</th>
                     </tr>
-                    <tr>
-                        <td class="tc"><input type="checkbox" name="id[]" value="59"></td>
-                        <td class="tc">
-                            <input type="text" name="ord[]" value="0">
-                        </td>
-                        <td class="tc">59</td>
-                        <td>
-                            <a href="#">Apple iPhone 6 Plus (A1524) 16GB 金色 移动联通电信4G手机</a>
-                        </td>
-                        <td>0</td>
-                        <td>2</td>
-                        <td>admin</td>
-                        <td>2014-03-15 21:11:01</td>
-                        <td></td>
-                        <td>
-                            <a href="#">修改</a>
-                            <a href="#">删除</a>
-                        </td>
-                    </tr>
-                    
-                    <tr>
-                        <td class="tc"><input type="checkbox" name="id[]" value="59"></td>
-                        <td class="tc">
-                            <input type="text" name="ord[]" value="0">
-                        </td>
-                        <td class="tc">59</td>
-                        <td>
-                            <a href="#">三星 SM-G5308W 白色 移动4G手机 双卡双待</a>
-                        </td>
-                        <td>0</td>
-                        <td>2</td>
-                        <td>admin</td>
-                        <td>2014-03-15 21:11:01</td>
-                        <td></td>
-                        <td>
-                            <a href="#">修改</a>
-                            <a href="#">删除</a>
-                        </td>
-                    </tr>
 
+                    @foreach($articles as $art)
                     <tr>
-                        <td class="tc"><input type="checkbox" name="id[]" value="59"></td>
+                        <td class="tc"><input type="checkbox" name="id[]" value="{{$art->id}}"></td>
                         <td class="tc">
-                            <input type="text" name="ord[]" value="0">
+                            <input type="number" name="ord[]" value="{{$art->art_sort}}" style="width: 40px;text-align: center">
                         </td>
-                        <td class="tc">59</td>
+                        <td class="tc">{{$art->id}}</td>
                         <td>
-                            <a href="#">荣耀 6 (H60-L11) 3GB内存增强版 白色 移动4G手机</a>
+                            <a href="#">{{$art->art_title}}</a>
                         </td>
-                        <td>0</td>
-                        <td>2</td>
-                        <td>admin</td>
-                        <td>2014-03-15 21:11:01</td>
-                        <td></td>
+                        @inject('articleTypes', 'App\Http\Services\ArticleType')
+                        <td>{{$articleTypes::$articleTypes[$art->is_public]}}</td>
+                        <td>{{$art->articleToCate->cate_name}}</td>
+                        <td>{{$art->articleToUser->name}}</td>
                         <td>
-                            <a href="#">修改</a>
-                            <a href="#">删除</a>
+                            {{--标签--}}
+                            @foreach(explode(',', $art->art_tags)as $tag)
+                                <a href="#" role="button" class="btn btn-info btn-xs">{{$tag}}</a>
+                            @endforeach
+                        </td>
+                        <td>{{$art->art_description}}</td>
+                        <td>{{$art->created_at}}</td>
+                        <td>{{$art->updated_at}}</td>
+                        <td>
+                            <a href="{{url('/article/'.$art->id.'/edit')}}" >修改</a>
+                            <a href="javascript:;" onclick="delCate({{$art->id}}, this)">删除</a>
                         </td>
                     </tr>
+                    @endforeach
+
                 </table>
 
 
-<div class="page_nav">
-<div>
-<a class="first" href="/wysls/index.php/Admin/Tag/index/p/1.html">第一页</a> 
-<a class="prev" href="/wysls/index.php/Admin/Tag/index/p/7.html">上一页</a> 
-<a class="num" href="/wysls/index.php/Admin/Tag/index/p/6.html">6</a>
-<a class="num" href="/wysls/index.php/Admin/Tag/index/p/7.html">7</a>
-<span class="current">8</span>
-<a class="num" href="/wysls/index.php/Admin/Tag/index/p/9.html">9</a>
-<a class="num" href="/wysls/index.php/Admin/Tag/index/p/10.html">10</a> 
-<a class="next" href="/wysls/index.php/Admin/Tag/index/p/9.html">下一页</a> 
-<a class="end" href="/wysls/index.php/Admin/Tag/index/p/11.html">最后一页</a> 
-<span class="rows">11 条记录</span>
-</div>
-</div>
+{{--<div class="page_nav">--}}
+{{--<div>--}}
+{{--<a class="first" href="/wysls/index.php/Admin/Tag/index/p/1.html">第一页</a> --}}
+{{--<a class="prev" href="/wysls/index.php/Admin/Tag/index/p/7.html">上一页</a> --}}
+{{--<a class="num" href="/wysls/index.php/Admin/Tag/index/p/6.html">6</a>--}}
+{{--<a class="num" href="/wysls/index.php/Admin/Tag/index/p/7.html">7</a>--}}
+{{--<span class="current">8</span>--}}
+{{--<a class="num" href="/wysls/index.php/Admin/Tag/index/p/9.html">9</a>--}}
+{{--<a class="num" href="/wysls/index.php/Admin/Tag/index/p/10.html">10</a> --}}
+{{--<a class="next" href="/wysls/index.php/Admin/Tag/index/p/9.html">下一页</a> --}}
+{{--<a class="end" href="/wysls/index.php/Admin/Tag/index/p/11.html">最后一页</a> --}}
+{{--<span class="rows">11 条记录</span>--}}
+{{--</div>--}}
+{{--</div>--}}
 
 
 
-                <div class="page_list">
-                    <ul>
-                        <li class="disabled"><a href="#">&laquo;</a></li>
-                        <li class="active"><a href="#">1</a></li>
-                        <li><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">4</a></li>
-                        <li><a href="#">5</a></li>
-                        <li><a href="#">&raquo;</a></li>
-                    </ul>
-                </div>
+                {{--<div class="page_list">--}}
+                    {{--<ul>--}}
+                        {{--<li class="disabled"><a href="#">&laquo;</a></li>--}}
+                        {{--<li class="active"><a href="#">1</a></li>--}}
+                        {{--<li><a href="#">2</a></li>--}}
+                        {{--<li><a href="#">3</a></li>--}}
+                        {{--<li><a href="#">4</a></li>--}}
+                        {{--<li><a href="#">5</a></li>--}}
+                        {{--<li><a href="#">&raquo;</a></li>--}}
+                    {{--</ul>--}}
+                {{--</div>--}}
             </div>
         </div>
     </form>
     <!--搜索结果页面 列表 结束-->
 
 
+@section('script')
+<script>
+    // 删除
+    function delCate(art_id, that)
+    {
+        layer.confirm('确定执行删除操作？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            $.post(
+                    '{{url('/article/delete')}}',// + '/' + cate_id,
+                    {_token: '{{csrf_token()}}', id: art_id},
+                    function(data){
+                        data.status ? layer.msg('删除成功！', {icon:6}) : layer.msg(data.content, {icon:5});
+                        $(that).parents('tr').remove();
+                    },
+                    'json');
+        }, function(index){
+            layer.close(index);
+        });
+    }
+</script>
 
-</body>
-</html>
+@endsection
+
+@endsection

@@ -29,3 +29,5 @@ Route::post('/article/uploadImg', 'Admin\ArticleController@uploadImgToLocal');
 Route::post('/article/store', 'Admin\ArticleController@store');
 Route::post('/article/delete', 'Admin\ArticleController@delete');
 Route::get('/article/{id}/edit', 'Admin\ArticleController@edit');
+Route::post('/article/{id}/update', 'Admin\ArticleController@update');
+Route::post('/article/batchDel', ['as' => 'article.batchDel', 'uses' => 'Admin\ArticleController@batchDel']);

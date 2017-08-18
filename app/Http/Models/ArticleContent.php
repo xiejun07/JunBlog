@@ -9,4 +9,6 @@ class ArticleContent extends Model
     protected $table = 'blog_article_content';
 
     protected $guarded = [];
+
+    public $timestamps = false;
 }

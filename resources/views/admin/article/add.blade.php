@@ -33,9 +33,9 @@
         </div>
         <div class="result_content">
             <div class="short_wrap">
-                <a href="#"><i class="fa fa-plus"></i>新增文章</a>
-                <a href="#"><i class="fa fa-recycle"></i>批量删除</a>
-                <a href="#"><i class="fa fa-refresh"></i>更新排序</a>
+                <a href="{{url('/article/create')}}"><i class="fa fa-plus"></i>新增文章</a>
+                <a href="{{url('/article')}}"><i class="fa fa-list"></i>文章列表</a>
+                <a href="{{url('/info')}}"><i class="fa fa-undo"></i>回到首页</a>
             </div>
         </div>
     </div>
@@ -199,7 +199,6 @@
         // 点击提交保存文章
         $('#submit_create').on('click', function(){
             var form = new FormData($('#create_form')[0]);
-            alert(form);
             $.ajax({
                 url: '{{url('/article/store')}}',
                 type: 'post',

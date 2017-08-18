@@ -27,8 +27,8 @@
             	<h3><i class="fa fa-fw fa-clipboard"></i>常用操作</h3>
                 <ul class="sub_menu">
                     <li><a href="{{url('/category/create')}}" target="main"><i class="fa fa-fw fa-plus-square"></i>添加分类</a></li>
-                    <li><a href="list.html" target="main"><i class="fa fa-fw fa-list-ul"></i>列表页</a></li>
-                    <li><a href="tab.html" target="main"><i class="fa fa-fw fa-list-alt"></i>tab页</a></li>
+                    <li><a href="{{url('/article/create')}}" target="main"><i class="fa fa-fw fa-list-alt"></i>新增文章</a></li>
+                    <li><a href="{{url('/article')}}" target="main"><i class="fa fa-fw fa-list-ul"></i>文章列表页</a></li>
                     <li><a href="img.html" target="main"><i class="fa fa-fw fa-image"></i>图片列表</a></li>
                 </ul>
             </li>
@@ -40,10 +40,10 @@
                 </ul>
             </li>
             <li>
-                <h3><i class="fa fa-fw fa-list"></i>文章管理</h3>
+                <h3><i class="fa fa-fw fa-file"></i>文章管理</h3>
                 <ul class="sub_menu">
-                    <li><a href="#" target="main"><i class="fa fa-fw fa-cubes"></i>文章列表</a></li>
-                    <li><a href="#" target="main"><i class="fa fa-fw fa-database"></i>新增文章</a></li>
+                    <li><a href="{{url('/article')}}" target="main"><i class="fa fa-fw fa-list"></i>文章列表</a></li>
+                    <li><a href="{{url('/article/create')}}" target="main"><i class="fa fa-fw fa-plus-circle"></i>新增文章</a></li>
                 </ul>
             </li>
             <li>

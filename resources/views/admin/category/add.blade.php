@@ -15,9 +15,9 @@
         </div>
         <div class="result_content">
             <div class="short_wrap">
-                <a href="#"><i class="fa fa-plus"></i>新增文章</a>
-                <a href="#"><i class="fa fa-recycle"></i>批量删除</a>
-                <a href="#"><i class="fa fa-refresh"></i>更新排序</a>
+                <a href="{{url('/category/create')}}"><i class="fa fa-plus"></i>新增分类</a>
+                <a href="{{url('category')}}"><i class="fa fa-list"></i>分类列表</a>
+                <a href="{{url('/info')}}"><i class="fa fa-undo"></i>回到首页</a>
             </div>
         </div>
     </div>

@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{{asset('admin/css/ch-ui.admin.css')}}">
     <link rel="stylesheet" href="{{asset('admin/font/css/font-awesome.min.css/')}}">
     <link rel="stylesheet" href="{{asset('org/bootstrap-3.3.7/daterangepicker.css')}}"/>
-    @include('UEditor::head');
+    @include('UEditor::head')
 </head>
 <body>
 

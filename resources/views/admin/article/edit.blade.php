@@ -33,9 +33,9 @@
         </div>
         <div class="result_content">
             <div class="short_wrap">
-                <a href="#"><i class="fa fa-plus"></i>新增文章</a>
-                <a href="#"><i class="fa fa-recycle"></i>批量删除</a>
-                <a href="#"><i class="fa fa-refresh"></i>更新排序</a>
+                <a href="{{url('/article/create')}}"><i class="fa fa-plus"></i>新增文章</a>
+                <a href="{{url('/article')}}"><i class="fa fa-list"></i>文章列表</a>
+                <a href="{{url('/info')}}"><i class="fa fa-undo"></i>回到首页</a>
             </div>
         </div>
     </div>
@@ -101,6 +101,7 @@
                         <td>
                             <input type="file" name="fileData" style="float: left">
                             <input type="hidden" name="art_icon" value=""/>
+                            <input type="hidden" name="old_icon" value="{{$article->art_icon}}"/>
                             <div id="img_view" style="float: left">
                                 <img src="{{$article->art_icon}}" alt="" width="200" style="float: left;"/>
                             </div>
@@ -133,16 +134,14 @@
                         <td>
                             <!-- 加载编辑器的容器 -->
                             <div id="temp" style="display: none">{{$article->articleGetContent->content}}</div>
-                            <script id="container" name="content" type="text/plain" class="content">
-
-                            </script>
+                            <script id="container" name="content" type="text/plain" class="content"></script>
                             {{--<textarea class="lg" name="content"></textarea>--}}
                         </td>
                     </tr>
                     <tr>
                         <th></th>
                         <td>
-                            <input type="button" class="btn btn-primary" value="提交" id="submit_create">
+                            <input type="button" class="btn btn-primary" value="提交" id="submit_create" onclick="submitEdit({{$article->id}}, {{$article->articleGetContent->id}})">
                             <input type="button" class="btn btn-default back" onclick="history.go(-1)" value="返回">
                         </td>
                     </tr>
@@ -159,7 +158,8 @@
         ue.ready(function(){
             ue.setHeight(600);
             ue.execCommand('serverparam', '_token', '{{ csrf_token() }}');//此处为支持laravel5 csrf ,根据实际情况修改,目的就是设置 _token 值.
-            ue.setContent($('#temp').html(), false);
+            var _html = unescapeHTML($('#temp').html());
+            ue.execCommand('inserthtml', _html);
         });
     </script>
 
@@ -202,12 +202,12 @@
             });
         });
 
-        // 点击提交保存文章
-        $('#submit_create').on('click', function(){
+        // 点击提交保存文章修改
+        function submitEdit(art_id, content_id)
+        {
             var form = new FormData($('#create_form')[0]);
-            alert(form);
             $.ajax({
-                url: '{{url('/article/store')}}',
+                url: '{{url('/article')}}'+ '/' + art_id+ '/update?c_id='+ content_id,
                 type: 'post',
                 data: form,
                 processData: false,
@@ -220,7 +220,14 @@
                     }
                 }
             });
-        });
+        }
+
+        // 把转义后的内容回显  把字符实体转义成标签符号
+        var unescapeHTML=function(a){
+            a = "" + a;
+            return a.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&apos;/g, "'");
+        };
+
     </script>
 @endsection
 

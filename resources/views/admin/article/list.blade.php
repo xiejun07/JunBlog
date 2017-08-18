@@ -37,8 +37,8 @@
             <div class="result_content">
                 <div class="short_wrap">
                     <a href="{{url('/article/create')}}"><i class="fa fa-plus"></i>新增文章</a>
-                    <a href="#"><i class="fa fa-recycle"></i>批量删除</a>
-                    <a href="#"><i class="fa fa-refresh"></i>更新排序</a>
+                    <a href="javascript:;" onclick="batchDelCategory()"><i class="fa fa-recycle"></i>批量删除</a>
+                    <a href="{{url('/info')}}"><i class="fa fa-undo"></i>回到首页</a>
                 </div>
             </div>
             <!--快捷导航 结束-->
@@ -87,13 +87,16 @@
                         <td>{{$art->updated_at}}</td>
                         <td>
                             <a href="{{url('/article/'.$art->id.'/edit')}}" >修改</a>
-                            <a href="javascript:;" onclick="delCate({{$art->id}}, this)">删除</a>
+                            <a href="javascript:;" onclick="delCate({{$art->id}}, {{$art->content_id}}, this)">删除</a>
                         </td>
                     </tr>
                     @endforeach
 
                 </table>
 
+                <div style="text-align: center">
+                    {{$articles->links()}}
+                </div>
 
 {{--<div class="page_nav">--}}
 {{--<div>--}}
@@ -132,20 +135,49 @@
 @section('script')
 <script>
     // 删除
-    function delCate(art_id, that)
+    function delCate(art_id, content_id, that)
     {
         layer.confirm('确定执行删除操作？', {
             btn: ['确定','取消'] //按钮
-        }, function(){
+        }, function(index){
             $.post(
                     '{{url('/article/delete')}}',// + '/' + cate_id,
-                    {_token: '{{csrf_token()}}', id: art_id},
+                    {_token: '{{csrf_token()}}', id: art_id, content_id:content_id},
                     function(data){
+                        layer.close(index);
                         data.status ? layer.msg('删除成功！', {icon:6}) : layer.msg(data.content, {icon:5});
                         $(that).parents('tr').remove();
                     },
                     'json');
         }, function(index){
+            layer.close(index);
+        });
+    }
+
+    // 批量删除
+    function batchDelCategory() {
+        var ids = $('input[name*=id]:checked');
+        var id_arr = [];
+        $.each(ids, function (i) {
+            id_arr.push($(this).val());
+        });
+        console.log(id_arr);
+        if (id_arr.length < 1) {
+            layer.msg('请勾选后再批量操作！');
+            return false;
+        }
+        layer.confirm('确定执行删除操作？', {
+            btn: ['确定', '取消'] //按钮
+        }, function (index) {
+            $.post(
+                    '{{URL::route('article.batchDel')}}',
+                    {id_arr: id_arr, _token: '{{csrf_token()}}'},
+                    function (data) {
+                        layer.close(index);
+                        data.status ? layer.msg('批量删除成功！', {icon: 6}) : layer.msg(data.content, {icon: 5});
+                        location.reload();
+                    }, 'json');
+        }, function (index) {
             layer.close(index);
         });
     }

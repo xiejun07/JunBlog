@@ -17,4 +17,14 @@ class ArticleContentRepository
     {
         return $this->articleContent;
     }
+
+    public function deleteContent($data)
+    {
+        if (is_array($data)) {
+            return $this->articleContent->whereIn('id', $data)->delete();
+        }
+        if (is_numeric($data)) {
+            return $this->articleContent->where('id', $data)->delete();
+        }
+    }
 }

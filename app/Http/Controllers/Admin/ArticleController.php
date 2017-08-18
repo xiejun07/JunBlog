@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
+use Illuminate\Http\Exception\HttpResponseException;
+use Illuminate\Support\Facades\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\CommonController;
 use App\Http\Services\ArticleService;
 use App\Http\Services\CategoryService;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Response;
 
 class ArticleController extends CommonController
 {
@@ -138,17 +141,60 @@ class ArticleController extends CommonController
     /**
      * 保存编辑内容
      */
-    public function update()
+    public function update(Request $request, $id)
     {
-
+        try {
+            DB::beginTransaction();
+            // 保存文章富文本内容修改
+            $this->articleService->updateContent($request->input('content'), $request->input('c_id'));
+            // 保存文章表内容
+            $params = $request->only('cate_id', 'art_title', 'art_sort', 'art_description', 'art_tags', 'is_public');
+            $params['art_icon'] = $request->art_icon ?: $request->old_icon;
+            $this->articleService->updateArticle($params, $id);
+            DB::commit();
+            return $this->commonAjaxReturn();
+        }catch (\Exception $e) {
+            DB::rollback();
+            return $this->commonAjaxReturn(false, '保存文章与内容异常回滚，请重新操作！');
+//            throw new HttpResponseException(response('保存文章与内容异常回滚，请重新操作！',422));
+        }
     }
 
     /**
-     * 删除
+     * 删除 需要同时删除文章内容表和文章表数据
      */
     public function delete(Request $request)
     {
-        $res = $this->articleService->getArticleModel()->where('id', $request->id)->delete();
-        return $res ? $this->commonAjaxReturn() : $this->commonAjaxReturn(false, '删除失败！请稍后再试');
+        try{
+            DB::beginTransaction();
+            $this->articleService->getArticleContentModel()->where('id', $request->content_id)->delete();
+            $this->articleService->getArticleModel()->where('id', $request->id)->delete();
+            DB::commit();
+            return $this->commonAjaxReturn();
+        }catch (\Exception $e) {
+            DB::rollback();
+            return $this->commonAjaxReturn(false, '删除失败！请稍后再试');
+        }
+    }
+
+    /**
+     * 批量删除
+     */
+    public function batchDel()
+    {
+        try {
+            DB::beginTransaction();
+            // 找出选中文章id对应的文章内容id
+            $contentIds = $this->articleService->getContentIds(Request::input('id_arr'));
+            // 删除对应的文章内容
+            $this->articleService->deleteContent($contentIds);
+            // 删除选中的文章
+            $this->articleService->deleteArticle(Request::input('id_arr'));
+            DB::commit();
+            return $this->commonAjaxReturn();
+        }catch (\Exception $e) {
+            DB::rollback();
+            return $this->commonAjaxReturn(false, '批量操作失败！');
+        }
     }
 }

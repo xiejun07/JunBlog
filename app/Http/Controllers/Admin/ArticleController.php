@@ -15,12 +15,6 @@ use Illuminate\Support\Facades\Response;
 class ArticleController extends CommonController
 {
     /**
-     * 上传文件保存在public文件夹的路径
-     * @var string
-     */
-    protected $uploadSave = '/uploads/upload/';
-
-    /**
      * 注入ArticleService
      * @var ArticleService
      */
@@ -65,7 +59,7 @@ class ArticleController extends CommonController
     /**
      * 保存新建信息
      */
-    public function store(Request $request)
+    public function store(\Illuminate\Http\Request $request)
     {
         // 先插入文章内容表
         $content = $request->input('content');
@@ -79,51 +73,16 @@ class ArticleController extends CommonController
     /**
      * 上传图片到本地
      */
-    public function uploadImgToLocal(Request $request)
+    public function uploadImgToLocal(\Illuminate\Http\Request $request)
     {
-
         $file = $request->file('fileData');
-        // 验证
-        $res = $this->checkFile($file);
-        if ($res !== true) {
-            return $res;
-        }
-
-        // 获取临时文件路径
-        $realPath = $file->getRealPath();
-        // 保存文件目录
-        $savePath = '/uploads/upload/'. date('Y-m-d', time()). '/';
-        // 绝对保存路径为   public_path(). '/uploads/upload/'. date('Y-m-d', time()). '/'
-        is_dir(public_path(). $savePath) ? null : mkdir(public_path(). $savePath, 0777, true);
-        // 拼接保存的文件名
-        $fileName = time(). '_'. iconv('UTF-8','UTF-8',$file->getClientOriginalName()); // . '.' . $file->getClientOriginalExtension();
-
-        // 将临时文件移动到保存路径中
-        if (!$file->move(public_path(). $savePath, $fileName)) {
+        if (!$this->checkFile($file)) {  // 验证
             return $this->commonAjaxReturn(false, '文件保存失败！');
         }
-
-        return response()->json(['status' => true, 'pathContent' => $savePath.$fileName, 'content' => '文件上传保存成功！']);
-    }
-
-    /**
-     * 上传文件的验证
-     * @param $file
-     * @return bool|\Illuminate\Http\JsonResponse
-     */
-    public function checkFile($file)
-    {
-        if (!$file->isValid()) {
-            return $this->commonAjaxReturn(false, '上传图片失败！');
+        if (!$pathContent = $this->uploadImg($file)) {  // 上传
+            return $this->commonAjaxReturn(false, '文件保存失败！');
         }
-        if ($file->getClientSize() > $file->getMaxFileSize()) {
-            return $this->commonAjaxReturn(false, '上传图片大小超过'. ($file->getMaxFileSize()/1024/1024). 'M!');
-        }
-        $allowTypes = ['png', 'jpg', 'gif', 'jpeg', 'bmp'];
-        if (!in_array(strtolower($file->getClientOriginalExtension()), $allowTypes)) {
-            return $this->commonAjaxReturn(false, '上传图片类型不支持!');
-        }
-        return true;
+        return response()->json(['status' => true, 'pathContent' => $pathContent, 'content' => '文件上传保存成功！']);
     }
 
     /**

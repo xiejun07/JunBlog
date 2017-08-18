@@ -33,3 +33,5 @@ Route::post('/article/{id}/update', 'Admin\ArticleController@update');
 Route::post('/article/batchDel', ['as' => 'article.batchDel', 'uses' => 'Admin\ArticleController@batchDel']);
 
 // 友情链接  resource管理
+Route::resource('/flink', 'Admin\FlinkController');
+Route::post('/flin/batchDel', ['as' => 'flink.batchDel', 'uses' => 'Admin\FlinkController@batchDel']);

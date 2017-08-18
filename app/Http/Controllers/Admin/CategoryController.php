@@ -61,7 +61,6 @@ class CategoryController extends CommonController
     {
         $category = $this->categoryService->getCategoryModel()->create($request->except('_token'));
         return $category ? $this->commonAjaxReturn() : back()->withInput();
-//        return $category ? redirect("/category/{$category->id}") : back()->withInput();
     }
 
     /**

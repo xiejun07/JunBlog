@@ -49,8 +49,8 @@
             <li>
                 <h3><i class="fa fa-fw fa-file"></i>友情链接管理</h3>
                 <ul class="sub_menu">
-                    <li><a href="{{url('/flink')}}" target="main"><i class="fa fa-fw fa-list"></i>文章列表</a></li>
-                    <li><a href="{{url('/flink/create')}}" target="main"><i class="fa fa-fw fa-plus-circle"></i>新增文章</a></li>
+                    <li><a href="{{url('/flink')}}" target="main"><i class="fa fa-fw fa-list"></i>友链列表</a></li>
+                    <li><a href="{{url('/flink/create')}}" target="main"><i class="fa fa-fw fa-plus-circle"></i>新增友链</a></li>
                 </ul>
             </li>
             <li>

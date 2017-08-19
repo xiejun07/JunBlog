@@ -47,7 +47,7 @@
                 </ul>
             </li>
             <li>
-                <h3><i class="fa fa-fw fa-file"></i>友情链接管理</h3>
+                <h3><i class="fa fa-fw fa-link"></i>友情链接管理</h3>
                 <ul class="sub_menu">
                     <li><a href="{{url('/flink')}}" target="main"><i class="fa fa-fw fa-list"></i>友链列表</a></li>
                     <li><a href="{{url('/flink/create')}}" target="main"><i class="fa fa-fw fa-plus-circle"></i>新增友链</a></li>
@@ -56,7 +56,7 @@
             <li>
             	<h3><i class="fa fa-fw fa-cog"></i>系统设置</h3>
                 <ul class="sub_menu">
-                    <li><a href="#" target="main"><i class="fa fa-fw fa-cubes"></i>网站配置</a></li>
+                    <li><a href="{{url('/conf')}}" target="main"><i class="fa fa-fw fa-cubes"></i>网站配置</a></li>
                     <li><a href="#" target="main"><i class="fa fa-fw fa-database"></i>备份还原</a></li>
                 </ul>
             </li>

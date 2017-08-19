@@ -35,3 +35,8 @@ Route::post('/article/batchDel', ['as' => 'article.batchDel', 'uses' => 'Admin\A
 // 友情链接  resource管理
 Route::resource('/flink', 'Admin\FlinkController');
 Route::post('/flin/batchDel', ['as' => 'flink.batchDel', 'uses' => 'Admin\FlinkController@batchDel']);
+
+// 系统配置  resource管理
+Route::resource('conf', 'Admin\ConfigController');
+Route::post('/conf/batchDel', ['as' => 'config.batchDel', 'uses' => 'Admin\ConfigController@batchDel']);
+Route::post('/conf/bindValue', 'Admin\ConfigController@bindValue');

@@ -4,7 +4,7 @@
 	<!--头部 开始-->
 	<div class="top_box">
 		<div class="top_left">
-			<div class="logo">后台管理模板</div>
+			<div class="logo">吃货Jun的博客</div>
 			<ul>
 				<li><a href="#" class="active">首页</a></li>
 				<li><a href="#">管理页</a></li>
@@ -12,9 +12,9 @@
 		</div>
 		<div class="top_right">
 			<ul>
-				<li>管理员：admin</li>
-				<li><a href="pass.html" target="main">修改密码</a></li>
-				<li><a href="#">退出</a></li>
+				<li>管理员：{{$user->name}}</li>
+				<li><a href="{{URL::route('user.edit', ['id' => $user->id])}}" target="main">修改密码</a></li>
+				<li><a href="{{url('logout')}}">退出</a></li>
 			</ul>
 		</div>
 	</div>

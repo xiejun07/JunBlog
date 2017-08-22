@@ -14,29 +14,43 @@
 //Route::get('/', function () {
 //    return view('welcome');
 //});
+Route::group(['namespace' => 'Admin'], function(){
+    Route::get('/login', 'PermissionController@login');
+    Route::get('/logout', 'PermissionController@logout');
+    Route::post('/checkLogin', 'PermissionController@checkLogin');
+});
 
-Route::get('/', 'Admin\IndexController@index');
-Route::get('/info', ['as' => 'index.info' ,'uses' => 'Admin\IndexController@info']);
 
-// category resource管理
-Route::resource('category', 'Admin\CategoryController');
-Route::post('/category/batchDel', ['as' => 'category.batchDel', 'uses' => 'Admin\CategoryController@batchDel']);
+Route::group(['middleware' => ['admin.login'], 'namespace' => 'Admin'], function(){
+    // 首页
+    Route::get('/', 'IndexController@index');
+    Route::get('/info', ['as' => 'index.info' ,'uses' => 'IndexController@info']);
+    Route::get('user/edit', ['as' => 'user.edit', 'uses' => 'PermissionController@editUser']);
 
-// article  一条一条管理
-Route::get('/article', 'Admin\ArticleController@getList');
-Route::get('/article/create', 'Admin\ArticleController@create');
-Route::post('/article/uploadImg', 'Admin\ArticleController@uploadImgToLocal');
-Route::post('/article/store', 'Admin\ArticleController@store');
-Route::post('/article/delete', 'Admin\ArticleController@delete');
-Route::get('/article/{id}/edit', 'Admin\ArticleController@edit');
-Route::post('/article/{id}/update', 'Admin\ArticleController@update');
-Route::post('/article/batchDel', ['as' => 'article.batchDel', 'uses' => 'Admin\ArticleController@batchDel']);
+    // category resource管理
+    Route::resource('category', 'CategoryController');
+    Route::post('/category/batchDel', ['as' => 'category.batchDel', 'uses' => 'CategoryController@batchDel']);
 
-// 友情链接  resource管理
-Route::resource('/flink', 'Admin\FlinkController');
-Route::post('/flin/batchDel', ['as' => 'flink.batchDel', 'uses' => 'Admin\FlinkController@batchDel']);
+    // article  一条一条管理
+    Route::get('/article', 'ArticleController@getList');
+    Route::get('/article/create', 'ArticleController@create');
+    Route::post('/article/uploadImg', 'ArticleController@uploadImgToLocal');
+    Route::post('/article/store', 'ArticleController@store');
+    Route::post('/article/delete', 'ArticleController@delete');
+    Route::get('/article/{id}/edit', 'ArticleController@edit');
+    Route::post('/article/{id}/update', 'ArticleController@update');
+    Route::post('/article/batchDel', ['as' => 'article.batchDel', 'uses' => 'ArticleController@batchDel']);
 
-// 系统配置  resource管理
-Route::resource('conf', 'Admin\ConfigController');
-Route::post('/conf/batchDel', ['as' => 'config.batchDel', 'uses' => 'Admin\ConfigController@batchDel']);
-Route::post('/conf/bindValue', 'Admin\ConfigController@bindValue');
+    // 友情链接  resource管理
+    Route::resource('/flink', 'FlinkController');
+    Route::post('/flin/batchDel', ['as' => 'flink.batchDel', 'uses' => 'FlinkController@batchDel']);
+
+    // 系统配置  resource管理
+    Route::resource('conf', 'ConfigController');
+    Route::post('/conf/batchDel', ['as' => 'config.batchDel', 'uses' => 'ConfigController@batchDel']);
+    Route::post('/conf/bindValue', 'ConfigController@bindValue');
+});
+
+Route::get('/jun', 'Home\IndexController@index');
+Route::get('/xie', 'Home\IndexController@article');
+

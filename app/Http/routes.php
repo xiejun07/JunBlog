@@ -52,5 +52,5 @@ Route::group(['middleware' => ['admin.login'], 'namespace' => 'Admin'], function
 });
 
 Route::get('/jun', 'Home\IndexController@index');
-Route::get('/xie', 'Home\IndexController@article');
+Route::get('/xie', 'Home\ArticleController@article');
 

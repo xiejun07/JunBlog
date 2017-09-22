@@ -134,4 +134,12 @@ class ArticleService
     {
         return $this->article->deleteArticle($data);
     }
+
+    /**
+     * 前台展示文章切换
+     */
+    public function getFourArticles()
+    {
+
+    }
 }

@@ -5,7 +5,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>HTML5全屏两列布局网页模板|DEMO_jQuery之家-自由分享jQuery、html5、css3的插件库</title>
-	<link href='http://fonts.useso.com/css?family=Source+Sans+Pro:400,700,900' rel='stylesheet' type='text/css'>
+	{{--<link href='http://fonts.useso.com/css?family=Source+Sans+Pro:400,700,900' rel='stylesheet' type='text/css'>--}}
 	<link rel="stylesheet" href="{{asset('home/article/css/reset.css')}}"> <!-- CSS reset -->
 	<link rel="stylesheet" type="text/css" href="{{asset('home/article/css/default.css')}}">
 	<link rel="stylesheet" href="{{asset('home/article/css/style.css')}}"> <!-- Resource style -->
@@ -131,7 +131,8 @@
 		</ul> <!-- .block-navigation -->
 	</main>	<!-- .cd-main -->
 	
-	<script src="http://libs.useso.com/js/jquery/1.11.0/jquery.min.js" type="text/javascript"></script>
+	{{--<script src="http://libs.useso.com/js/jquery/1.11.0/jquery.min.js" type="text/javascript"></script>--}}
+    <script type="text/javascript" src="{{asset('admin/js/jquery.js')}}"></script>
 	<script>window.jQuery || document.write('<script src="{{asset('home/article/js/jquery-1.11.0.min.js')}}"><\/script>')</script>
 	<script src="{{asset('home/article/js/main.js')}}"></script> <!-- Resource jQuery -->
 </body>
